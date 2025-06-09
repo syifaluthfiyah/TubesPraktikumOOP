@@ -1,0 +1,15 @@
+{
+  "configurations": [
+    
+    {
+      "type": "java",
+      "name": "Spring Boot-FlightApplication<flight>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.flight.booking.FlightApplication",
+      "projectName": "flight",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}

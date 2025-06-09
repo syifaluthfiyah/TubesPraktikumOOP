@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convert Ticket</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f4f7fc 0%, #edf1f7 100%);
+            font-family: 'Poppins', sans-serif;
+            padding-top: 20px;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(#4a90e2 1px, transparent 1px),
+                radial-gradient(#4a90e2 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: 0 0, 25px 25px;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+        }
+
+        h2, h3 {
+            color: #1a3a5f;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-control {
+            height: 48px;
+            border-radius: 12px;
+            border: 2px solid #e1e8ef;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+
+        .form-control:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+        }
+
+        label {
+            color: #566a7f;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            height: 48px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 1.5rem;
+        }
+
+        .btn-success {
+            background-color: #4a90e2;
+            border: none;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #357abd;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background-color: #4a90e2;
+            border: none;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #357abd;
+            transform: translateY(-2px);
+        }
+
+        .text-danger {
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        .table {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .table th {
+            background-color: #4a90e2;
+            color: white;
+            font-weight: 500;
+            padding: 1rem;
+            font-size: 0.9rem;
+            border: none;
+        }
+
+        .table td {
+            padding: 1rem;
+            font-size: 0.9rem;
+            color: #566a7f;
+            vertical-align: middle;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f8fafd;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h2, h3 {
+                font-size: 1.5rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .btn {
+                font-size: 0.8rem;
+                height: 40px;
+            }
+
+            .table-responsive {
+                margin: 0 -10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <h2 class="text-center mb-4">Convert Ticket Price</h2>
+
+                <form th:action="@{/flights/convertCurrency}" method="post">
+                    <input type="hidden" name="id" th:if="${param.id != null}" th:value="${param.id}" />
+
+                    <div class="form-group">
+                        <label for="toCur">Select Target Currency</label>
+                        <select class="form-control" id="toCur" name="desiredCur" required>
+                            <option value="">Choose currency...</option>
+                            <option th:each="code : ${codes.CurrConv}"
+                                    th:text="${code}"
+                                    th:value="${code.code}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-exchange-alt"></i> Convert Currency
+                        </button>
+                    </div>
+                </form>
+
+                <div th:if="${notFound != null}" class="mt-4 text-center">
+                    <div class="text-danger">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                        No Record Found!
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${ticket != null}" class="mt-4">
+                <h3>
+                    <i class="fas fa-receipt mr-2"></i>
+                    Conversion Result
+                </h3>
+
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Departure</th>
+                            <th>Arrival</th>
+                            <th>Airline</th>
+                            <th>Available Seats</th>
+                            <th>Connections</th>
+                            <th>Price</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td th:text="${ticket.id}"></td>
+                            <td th:text="${ticket.originCity}"></td>
+                            <td th:text="${ticket.destinationCity}"></td>
+                            <td th:text="${ticket.airline}"></td>
+                            <td th:text="${ticket.availableSeats}"></td>
+                            <td th:text="${ticket.numberOfConnections}"></td>
+                            <td th:text="${ticket.ticketPrice}"></td>
+                            <td>
+                                <a th:if="${ticket.availableSeats > 0}"
+                                   class="btn btn-primary btn-sm"
+                                   th:href="@{/flights/book-flight(id=${ticket.id})}">
+                                    <i class="fas fa-ticket-alt"></i> Book
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

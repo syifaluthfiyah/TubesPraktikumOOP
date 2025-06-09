@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Book A Flight</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f4f7fc 0%, #edf1f7 100%);
+            font-family: 'Poppins', sans-serif;
+            padding-top: 20px;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(#4a90e2 1px, transparent 1px),
+                radial-gradient(#4a90e2 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: 0 0, 25px 25px;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-top: 2rem;
+        }
+
+        .card-header {
+            background: #4a90e2;
+            color: white;
+            font-weight: 600;
+            padding: 1.5rem;
+            border-radius: 15px 15px 0 0;
+            border: none;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .card-body {
+            padding: 2rem;
+            background: transparent;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            color: #566a7f;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .font-weight-bold {
+            color: #1a3a5f;
+            font-size: 1rem;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .btn {
+            height: 48px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 1.5rem;
+        }
+
+        .btn-success {
+            background-color: #4a90e2;
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            height: 56px;
+        }
+
+        .btn-success:hover {
+            background-color: #357abd;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-primary {
+            color: #4a90e2;
+            border: 2px solid #4a90e2;
+            background-color: white;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #4a90e2;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            border-radius: 12px;
+            padding: 1rem;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-top: 2rem;
+        }
+
+        .alert-info {
+            background-color: rgba(74, 144, 226, 0.1);
+            color: #4a90e2;
+            border-color: rgba(74, 144, 226, 0.2);
+        }
+
+        .form-control {
+            height: 48px;
+            border-radius: 12px;
+            border: 2px solid #e1e8ef;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+
+        .form-control:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+        }
+
+        #ticketPrice {
+            font-size: 1.5rem;
+            color: #4a90e2;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .card {
+                margin-top: 1rem;
+            }
+
+            .card-header {
+                padding: 1rem;
+                font-size: 1.1rem;
+            }
+
+            .card-body {
+                padding: 1rem;
+            }
+
+            .btn {
+                font-size: 0.8rem;
+                height: 40px;
+            }
+
+            .btn-success {
+                height: 48px;
+            }
+
+            #ticketPrice {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="header-actions">
+                <h2 class="text-primary">Book Your Flight</h2>
+                <div>
+                    <button onclick="goBack()" type="button" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button onclick="goForward()" type="button" class="btn btn-outline-primary ml-2">
+                        <i class="fas fa-arrow-right"></i> Forward
+                    </button>
+                </div>
+            </div>
+
+            <!-- Flight Booking Form -->
+            <div class="card">
+                <div class="card-header">Flight Details</div>
+                <div class="card-body">
+                    <form th:action="@{/flights/book-flight}" method="post">
+                        <div th:if="${param.id != null}">
+                            <input type="hidden" name="id" th:value="${param.id}" />
+                        </div>
+
+                        <div th:if="${ticket != null}">
+                            <div class="form-group">
+                                <label>From</label>
+                                <span class="font-weight-bold" th:text="${ticket.originCity}"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>To</label>
+                                <span class="font-weight-bold" th:text="${ticket.destinationCity}"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Airline</label>
+                                <span class="font-weight-bold" th:text="${ticket.airline}"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Available Seats</label>
+                                <span class="font-weight-bold" th:text="${ticket.availableSeats}"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Number of Connections</label>
+                                <span class="font-weight-bold" th:text="${ticket.numberOfConnections}"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Ticket Price ($)</label>
+                                <span class="font-weight-bold" id="ticketPrice" th:text="${ticket.ticketPrice}"></span>
+                            </div>
+                            <div class="form-group mb-0">
+                                <button type="submit" class="btn btn-success btn-block" id="payButton">
+                                    <i class="fas fa-credit-card"></i>
+                                    <span th:text="'Pay $' + ${ticket.ticketPrice}">Pay</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Success Message -->
+            <div th:if="${param.success}" class="alert alert-info">
+                <i class="fas fa-check-circle mr-2"></i> Your ticket purchase was successful!
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function goBack() {
+        window.location.href = '/flights';
+    }
+
+    function goForward() {
+        window.history.forward();
+    }
+
+    async function changeCurrency(desiredCur) {
+        try {
+            var ticketId = [[${param.id}]];
+            const response = await fetch(`/api/currency/convert/${ticketId}?desiredCur=${desiredCur}`);
+            const data = await response.json();
+            const convertedPrice = data;
+            document.getElementById('ticketPrice').innerText = convertedPrice;
+            document.getElementById('payButton').innerText = 'Pay ' + convertedPrice;
+        } catch (error) {
+            console.error('Error converting currency:', error);
+        }
+    }
+</script>
+</body>
+</html>

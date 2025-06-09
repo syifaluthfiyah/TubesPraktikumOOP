@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Search Flights - SkyFly</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f4f7fc 0%, #edf1f7 100%);
+            font-family: 'Poppins', sans-serif;
+            padding-top: 20px;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(#4a90e2 1px, transparent 1px),
+                radial-gradient(#4a90e2 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: 0 0, 25px 25px;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+        }
+
+        h2, h4 {
+            color: #1a3a5f;
+            font-weight: 600;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .form-control {
+            height: 48px;
+            border-radius: 12px;
+            border: 2px solid #e1e8ef;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+
+        .form-control:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+        }
+
+        label {
+            color: #566a7f;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            height: 48px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 1.5rem;
+        }
+
+        .btn-success {
+            background-color: #4a90e2;
+            border: none;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #357abd;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-primary {
+            color: #4a90e2;
+            border: 2px solid #4a90e2;
+            background-color: white;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #4a90e2;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background-color: #4a90e2;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #357abd;
+            transform: translateY(-2px);
+        }
+
+        .table {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .table th {
+            background-color: #4a90e2;
+            color: white;
+            font-weight: 500;
+            padding: 1rem;
+            font-size: 0.9rem;
+            border: none;
+        }
+
+        .table td {
+            padding: 1rem;
+            font-size: 0.9rem;
+            color: #566a7f;
+            vertical-align: middle;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f8fafd;
+        }
+
+        .alert {
+            border-radius: 12px;
+            padding: 1rem;
+            font-weight: 500;
+        }
+
+        .text-danger {
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .btn {
+                font-size: 0.8rem;
+                height: 40px;
+            }
+
+            .form-row {
+                margin: 0;
+            }
+
+            .form-group {
+                padding: 0;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-actions">
+        <h2>Search Flights</h2>
+        <div>
+            <button onclick="goBack()" type="button" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <a href="/flights" class="btn btn-outline-primary ml-2">
+                <i class="fas fa-plane"></i> All Flights
+            </a>
+        </div>
+    </div>
+
+    <div class="card p-4 mb-4">
+        <form th:action="@{/flights/search}" method="post">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="originCity">From</label>
+                    <select class="form-control" id="originCity" name="originCity">
+                        <option th:each="flight, i:${flights}" th:text="${flight.originCity}" th:value="${flight.originCity}"></option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="destinationCity">To</label>
+                    <select class="form-control" id="destinationCity" name="destinationCity">
+                        <option th:each="flight, i:${flights}" th:text="${flight.destinationCity}" th:value="${flight.destinationCity}"></option>
+                    </select>
+                    <div th:if="${DestinationError != null}" class="text-danger" th:text="${DestinationError}"></div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="ticketPrice">Price Order</label>
+                    <select class="form-control" id="ticketPrice" name="order">
+                        <option value="asc">Lowest to Highest</option>
+                        <option value="desc">Highest to Lowest</option>
+                    </select>
+                </div>
+            </div>
+            <div class="text-right">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-search"></i> Search Flights
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div th:if="${notFound != null}" class="alert alert-danger text-center">
+        <i class="fas fa-exclamation-circle mr-2"></i> No flights found matching your criteria
+    </div>
+
+    <th:block th:if="${results != null}">
+        <div class="mb-4">
+            <h4>Search Results</h4>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Departure</th>
+                    <th>Arrival</th>
+                    <th>Airline</th>
+                    <th>Available Seats</th>
+                    <th>Connections</th>
+                    <th>Price ($)</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="flight : ${results}">
+                    <td th:text="${flight.id}"></td>
+                    <td th:text="${flight.originCity}"></td>
+                    <td th:text="${flight.destinationCity}"></td>
+                    <td th:text="${flight.airline}"></td>
+                    <td th:text="${flight.availableSeats}"></td>
+                    <td th:text="${flight.numberOfConnections}"></td>
+                    <td th:text="${flight.ticketPrice}"></td>
+                    <td>
+                        <a th:if="${flight.availableSeats > 0}"
+                           th:href="@{/flights/book-flight(id=${flight.id})}"
+                           class="btn btn-primary">
+                           <i class="fas fa-ticket-alt"></i> Book
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+</div>
+
+<script>
+    function goBack() {
+        const baseUrl = window.location.origin + window.location.pathname;
+        const referrer = document.referrer;
+        
+        if (referrer && referrer.startsWith(window.location.origin)) {
+            window.location.href = referrer.split('?')[0];
+        } else {
+            window.location.href = '/flights';
+        }
+    }
+
+    function goForward() {
+        window.history.forward();
+    }
+</script>
+</body>
+</html>

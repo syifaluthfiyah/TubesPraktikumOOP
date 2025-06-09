@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Attractions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f4f7fc 0%, #edf1f7 100%);
+            font-family: 'Poppins', sans-serif;
+            padding-top: 20px;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(#4a90e2 1px, transparent 1px),
+                radial-gradient(#4a90e2 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: 0 0, 25px 25px;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #1a3a5f;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-control {
+            height: 48px;
+            border-radius: 12px;
+            border: 2px solid #e1e8ef;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+
+        .form-control:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+        }
+
+        label {
+            color: #566a7f;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            height: 48px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 1.5rem;
+        }
+
+        .btn-success {
+            background-color: #4a90e2;
+            border: none;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #357abd;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-primary {
+            color: #4a90e2;
+            border: 2px solid #4a90e2;
+            background-color: white;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #4a90e2;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            border-radius: 12px;
+            padding: 1rem;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .alert-danger {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            border-color: rgba(220, 53, 69, 0.2);
+        }
+
+        .table {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .table th {
+            background-color: #4a90e2;
+            color: white;
+            font-weight: 500;
+            padding: 1rem;
+            font-size: 0.9rem;
+            border: none;
+        }
+
+        .table td {
+            padding: 1rem;
+            font-size: 0.9rem;
+            color: #566a7f;
+            vertical-align: middle;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f8fafd;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .btn {
+                font-size: 0.8rem;
+                height: 40px;
+            }
+
+            .table-responsive {
+                margin: 0 -10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-actions">
+        <h1>Destination Site Attractions</h1>
+        <div>
+            <button onclick="goBack()" type="button" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <button onclick="goForward()" type="button" class="btn btn-outline-primary ml-2">
+                <i class="fas fa-arrow-right"></i> Forward
+            </button>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <form th:action="@{/map/displaySiteAttractions}" method="post">
+                    <div class="form-group">
+                        <label for="city">Select Destination City</label>
+                        <select class="form-control" id="city" name="city" required>
+                            <option value="" disabled selected>Choose a destination...</option>
+                            <option th:each="flight : ${flights}"
+                                    th:value="${flight.destinationCity}"
+                                    th:text="${flight.destinationCity}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-search-location"></i> Find Attractions
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${notFound != null}" class="alert alert-danger text-center">
+        <i class="fas fa-exclamation-circle mr-2"></i>
+        No Site Attractions Found!
+    </div>
+
+    <div th:if="${result != null}" class="mt-4">
+        <h2>
+            <i class="fas fa-map-marker-alt mr-2"></i>
+            Site Attractions
+        </h2>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Type</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="restaurant : ${result.results}">
+                    <td>
+                        <i class="fas fa-landmark mr-2"></i>
+                        <span th:text="${restaurant.name}">Attraction Name</span>
+                    </td>
+                    <td th:text="${restaurant.formatted_address}">Address</td>
+                    <td>
+                        <span th:if="${not #lists.isEmpty(restaurant.types)}"
+                              th:text="${restaurant.types[0]}">Type</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function goBack() {
+        window.history.back();
+    }
+
+    function goForward() {
+        window.history.forward();
+    }
+</script>
+</body>
+</html>

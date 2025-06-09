@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Add Flight</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous" />
+</head>
+
+<body>
+<th:block layout:fragment="content">
+    <div class="container my-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-primary">Update Travel Offer</h1>
+            <div>
+                <button onclick="goBack()" type="button" class="btn btn-outline-primary mr-2">
+                    <i class="fa fa-arrow-left"></i>
+                </button>
+                <button onclick="goForward()" type="button" class="btn btn-outline-primary">
+                    <i class="fa fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div th:if="${param.success}">
+            <div class="alert alert-info text-center">Travel Offer Updated!</div>
+        </div>
+
+        <form th:action="@{/admin/flight}" method="put" th:object="${flight}" class="mb-5">
+            <input type="hidden" name="id" th:if="${param.id != null}" th:value="${param.id}" />
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label>Origin City</label>
+                    <input type="text" name="originCity" class="form-control" placeholder="Origin City" required autofocus>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Destination City</label>
+                    <input type="text" name="destinationCity" class="form-control" placeholder="Destination City" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Airline</label>
+                    <input type="text" name="airline" class="form-control" placeholder="Airline" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Available Seats</label>
+                    <input type="number" name="availableSeats" class="form-control" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Number Of Connections</label>
+                    <input type="number" name="numberOfConnections" class="form-control" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Ticket Price</label>
+                    <input type="number" name="ticketPrice" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-success btn-lg">Save</button>
+            </div>
+        </form>
+
+        <h3 class="mb-3 text-secondary">All Flights</h3>
+        <table class="table table-striped table-bordered">
+            <thead class="thead-light">
+            <tr>
+                <th>ID</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Airline</th>
+                <th>Available Seats</th>
+                <th>Connections</th>
+                <th>Ticket Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="flight : ${flights}">
+                <td th:text="${flight.id}">Dark</td>
+                <td th:text="${flight.originCity}"></td>
+                <td th:text="${flight.destinationCity}"></td>
+                <td th:text="${flight.airline}"></td>
+                <td th:text="${flight.availableSeats}"></td>
+                <td th:text="${flight.numberOfConnections}"></td>
+                <td>
+                    <a th:href="@{/flights/convertPrice(id=${flight.id})}" th:text="${flight.ticketPrice}">Price</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>
+
+<script>
+    function goBack() {
+        const baseUrl = window.location.origin + window.location.pathname;
+        const referrer = document.referrer;
+        
+        if (referrer && referrer.startsWith(window.location.origin)) {
+            window.location.href = referrer.split('?')[0];
+        } else {
+            window.location.href = '/flights';
+        }
+    }
+
+    function goForward() {
+        window.history.forward();
+    }
+</script>
+</body>
+</html>
